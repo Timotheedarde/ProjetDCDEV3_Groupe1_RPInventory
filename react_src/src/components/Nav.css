@@ -1,0 +1,16 @@
+.navigation{
+    width: 20%;
+}
+
+.navigation ul{
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navigation a{
+    text-decoration: none;
+}
