@@ -12,16 +12,10 @@ export default function Nav() {
         <nav className='navigation'>
             <ul>
                 <li>
-                    <Link to="/">Home</Link>
+                    <Link to="/">Connexion</Link>
                 </li>
                 <li>
-                    <Link to="/page_1">Page 1</Link>
-                </li>
-                <li>
-                    <Link to="/page_2">Page 2</Link>
-                </li>
-                <li>
-                    <Link to="/page_3">Page 3</Link>
+                    <Link to="/register">Inscription</Link>
                 </li>
             </ul>
         </nav>

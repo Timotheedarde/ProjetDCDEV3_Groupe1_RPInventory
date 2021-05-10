@@ -15,8 +15,6 @@ const Header = (props) =>{
             <img src={logo} className="logo" alt="logo" />
             <p>{props.appName}</p>
             <Nav/>
-            <img src={logo} className="logo" alt="logo" />
-            <span>test de push matheo</span>
         </header>
     )
 }
