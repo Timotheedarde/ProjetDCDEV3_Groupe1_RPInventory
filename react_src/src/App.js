@@ -4,8 +4,8 @@ import {
     Switch,
     Route,
 } from "react-router-dom";
-import Header from './components/Header';
-import Page from './components/Page';
+import Page_Login from './pages/auth/login';
+import Page_Register from './pages/auth/register';
 
 import './App.css';
 
@@ -13,19 +13,12 @@ function App() {
 
   return (
     <Router>
-        <Header appName="RP Inventory"/>
         <Switch>
-            <Route path="/page_1">
-                <Page title="Page 1" nextPage="/page_2" />
+            <Route exact path="/register">
+                <Page_Register/>
             </Route>
-            <Route path="/page_2">
-                <Page title="Page 2" nextPage="/page_3" />
-            </Route>
-            <Route path="/page_3">
-                <Page title="Page 3" nextPage="/" />
-            </Route>
-            <Route path="/">
-                <Page title="Accueil" nextPage="/page_1" />
+            <Route exact path="/">
+                <Page_Login/>
             </Route>
         </Switch>
     </Router>
