@@ -6,22 +6,14 @@ import {
 } from "react-router-dom";
 import Header from './components/Header';
 import Page from './components/Page';
-import TodoList from './components/TodoList';
 
 import './App.css';
 
 function App() {
 
-  const[color, setColor] = useState();
-
   return (
     <Router>
-        <Header appName="Ma todo liste" color={color}/>
-        <label>
-            Choisir la couleur du Header
-            <input onChange={(e) => setColor(e.target.value)}/>
-        </label>
-        <TodoList/>
+        <Header appName="RP Inventory"/>
         <Switch>
             <Route path="/page_1">
                 <Page title="Page 1" nextPage="/page_2" />

@@ -13,7 +13,7 @@ app.get('/', function (req, res) {
 app.get('/todo', async (req, res) => {
 
   let {db_client, db_connection} = await connect()
-  
+
   db_connection.collection('todo').find({}).toArray((err, result) => {
     if(err) return console.log(err)
 
@@ -21,10 +21,9 @@ app.get('/todo', async (req, res) => {
 
     db_client.close()
     res.send(result)
-   
+
   })
 })
-
 
 app.listen(config.port, function () {
   console.log(`Example app listening on port ${config.port} !`)
