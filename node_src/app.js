@@ -58,6 +58,62 @@ app.get('/', function (req, res) {
   })
 })*/
 
+/*************************************************/
+
+app.get("/auth/users", async (req, res) => {
+  try {
+    let { db_client, db_connection } = await connect();
+    db_connection
+        .collection("users")
+        .find()
+        .toArray((err, result) => {
+          if (err) return console.log(err);
+
+          console.log("users :", result);
+
+          db_client.close();
+          res.send(result);
+        });
+  } catch (err) {
+    res.status(500);
+    res.send("Server error");
+  }
+});
+
+app.get("/auth/user", async (req, res) => {
+  let userExist = req.body;
+
+  try {
+    const options = {
+      projection: { username: 1 },
+    };
+    let { db_client, db_connection } = await connect();
+
+    try {
+      let user = await db_connection
+          .collection("users")
+          .findOne({ username: userExist.username },options);
+
+      if (user) {
+        throw new Error("User already exists");
+      }
+
+      res.send("Username available");
+      console.log("Username available")
+
+    } catch (err) {
+      res.status(400);
+      res.send(err.message)
+      console.log(err.message)
+
+    }
+  } catch (err) {
+    res.status(500);
+    console.log("Server error")
+    res.send("Server error");
+  }
+});
+
 
 app.post("/auth/signup", async (req, res) => {
   let newUser = req.body;
@@ -145,7 +201,7 @@ app.post('/auth/logout', (req, res) => {
 })
 
 
-
+/*************************************************/
 
 
 app.post('/personage',verifySession, async (req, res) => {

@@ -1,0 +1,13 @@
+.RegisterForm {
+    color:white;
+}
+
+.identifiant {
+    display: flex;
+    flex-direction: column;
+}
+
+.password {
+    display: flex;
+    flex-direction: column;
+}
