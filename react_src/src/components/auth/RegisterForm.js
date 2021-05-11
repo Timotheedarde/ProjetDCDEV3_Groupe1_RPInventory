@@ -9,7 +9,7 @@ export default function RegisterForm() {
     const [inputValueUN, setInputValueUN] = useState("");
     const [inputValuePW, setInputValuePW] = useState("");
 
-    const handleAdd = () => {
+    const handleRegister = () => {
         let newUser = { username: inputValueUN, password: inputValuePW };
 
         axios
@@ -38,7 +38,7 @@ export default function RegisterForm() {
 
     return (
         <div className='RegisterForm'>
-            <h1>Inscription / Connexion</h1>
+            <h2>Inscription / Connexion</h2>
             <form action="">
                 <div className='identifiant'>
                     <label htmlFor="">Identifiant</label>
@@ -61,7 +61,7 @@ export default function RegisterForm() {
                 </div>
             </form>
 
-            <button onClick={handleAdd}>Créer mon compte</button>
+            <button onClick={handleRegister}>Créer mon compte</button>
         </div>
     );
 }

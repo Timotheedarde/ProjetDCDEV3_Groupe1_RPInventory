@@ -80,6 +80,7 @@ app.get("/auth/users", async (req, res) => {
   }
 });
 
+/*
 app.get("/auth/user", async (req, res) => {
   let userExist = req.body;
 
@@ -113,6 +114,7 @@ app.get("/auth/user", async (req, res) => {
     res.send("Server error");
   }
 });
+*/
 
 
 app.post("/auth/signup", async (req, res) => {
