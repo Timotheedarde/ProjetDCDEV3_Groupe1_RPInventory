@@ -1,9 +1,9 @@
 import React from 'react';
-import './login-form.css';
+import './register-form.css';
 
-export default function LoginForm() {
+export default function RegisterForm() {
     return (
-        <div className='LoginForm'>
+        <div className='RegisterForm'>
             <div className="titles-form">
                 <span className="register-title">Inscription</span>
                 <span>/</span>
@@ -21,8 +21,20 @@ export default function LoginForm() {
                     <input className="input-form" type="password"/>
                 </div>
 
+                <div className="majeur">
+                    <input className="checkbox" type="checkbox" name="" id=""/>
+                    <label className="label-checkbox" htmlFor="">
+                        Je certifie avoir plus de 18 ans et j’accepte les <span className="conditions">conditions d’utilisations</span>  ainsi que la  <span className="conditions">politique de confidentialité</span>.
+                    </label>
+                </div>
+
+                <div className="newsletter">
+                    <input className="checkbox" type="checkbox" name="" id=""/>
+                    <label className="label-checkbox" htmlFor="">Je veux recevoir par email les nouveautés du jeu et les offres promotionnelles. </label>
+                </div>
+
                 <div>
-                    <button className="button-submit">connexion</button>
+                    <button className="button-submit">INSCRIPTION</button>
                 </div>
 
                 <div className="footer-form">
@@ -37,8 +49,8 @@ export default function LoginForm() {
                     </div>
 
                     <div className="account">
-                        <span className="allready-account">Vous n'avez pas de compte ?</span>
-                        <a className="connexion" href="/register">Inscrivez-vous</a>
+                        <span className="allready-account">Vous avez déjà un compte ?</span>
+                        <a className="connexion" href="/">Connectez-vous</a>
                     </div>
                 </div>
             </form>
