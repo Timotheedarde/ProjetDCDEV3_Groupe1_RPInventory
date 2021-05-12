@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import './RegisterForm.css';
-import axios from "axios";
+import ButtonPrimary from '../button'
+import './auth-form.css'
 
 export default function RegisterForm() {
 
@@ -37,31 +37,35 @@ export default function RegisterForm() {
     };
 
     return (
-        <div className='RegisterForm'>
-            <h2>Inscription / Connexion</h2>
+        <div className='LoginForm'>
+            <div className="titles-form">
+                <a href="/" className="register-title">Connexion</a>
+                <span>/</span>
+                <span className="login-title">Inscription</span>
+            </div>
+
             <form action="">
                 <div className='identifiant'>
-                    <label htmlFor="">Identifiant</label>
-                    <input type="text"
-                           value={inputValueUN}
-                           onChange={(e) => {
-                               setInputValueUN(e.target.value);
-                           }}
-                    />
+                    <label className="inputs-label" htmlFor="">Identifiant</label>
+                    <input className="input-form" type="text" value={inputValueUN} onChange={(e) => setInputValueUN(e.target.value)} />
                 </div>
 
                 <div className='password'>
-                    <label htmlFor="">Mot de passe</label>
-                    <input type="password"
-                           value={inputValuePW}
-                           onChange={(e) => {
-                               setInputValuePW(e.target.value);
-                           }}
-                    />
+                    <label className="inputs-label" htmlFor="">Mot de passe</label>
+                    <input className="input-form" type="password"/>
+                </div>
+
+                <div className='content-btn-submit'>
+                    <ButtonPrimary onClick={handleRegister} text='Inscription' />
+                </div>
+
+                <div className="footer-form">
+                    <div className="account">
+                        <span className="allready-account">Vous avez déjà un compte ?</span>
+                        <a className="connexion" href="/">Connectez-vous</a>
+                    </div>
                 </div>
             </form>
-
-            <button onClick={handleRegister}>Créer mon compte</button>
         </div>
     );
 }

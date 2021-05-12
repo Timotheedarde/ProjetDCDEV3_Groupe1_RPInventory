@@ -1,0 +1,117 @@
+.LoginForm {
+    color:white;
+<<<<<<< HEAD:react_src/src/components/auth/auth-form.css
+    margin: 40px;
+    height: 100%;
+    padding: 50px;
+}
+form
+{
+    padding-top: 200px;
+}
+fieldset
+{
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+.titles-form {
+    text-transform: uppercase;
+    font-size: 22px;
+}
+.login-title {
+    font-weight: 700;
+}
+.register-title {
+    font-weight: 400;
+}
+.login-title,
+.register-title
+{
+    color: white;
+    text-decoration: none;
+    font-size: 22px;
+}
+=======
+}
+
+>>>>>>> dbfc1c154541e54d2cd31ad7f6c6ddeeefc1cc3c:react_src/src/components/auth/login-form.css
+.identifiant {
+    display: flex;
+    flex-direction: column;
+}
+<<<<<<< HEAD:react_src/src/components/auth/auth-form.css
+.inputs-label {
+    padding-top: 20px;
+    font-size: 22px;
+}
+.password {
+    display: flex;
+    flex-direction: column;
+    margin: 20px 0 20px;
+}
+.input-form {
+    height: 30px;
+    border: none;
+    border-radius: 2px;
+    padding: 10px 20px;
+    margin-top: 5px;
+    font-size: 1.1em;
+}
+.checkbox {
+    margin: 0 20px 0 0;
+}
+.label-checkbox {
+    font-size: 14px;
+    font-weight: 200;
+}
+.majeur {
+    display: flex;
+    align-items: start;
+    justify-content: center;
+}
+.conditions {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.newsletter {
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    margin: 20px 0 20px;
+}
+.content-btn-submit {
+    padding-top: 100px;
+}
+.footer-form {
+    padding-top: 50px;
+}
+.social-register {
+    display: flex;
+    justify-content: center;
+    color: #B2B2B2;
+}
+.button-grp {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px 0 20px;
+}
+.account {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.allready-account {
+    color: #B2B2B2;
+}
+.connexion {
+    color: white;
+    font-weight: 600;
+=======
+
+.password {
+    display: flex;
+    flex-direction: column;
+>>>>>>> dbfc1c154541e54d2cd31ad7f6c6ddeeefc1cc3c:react_src/src/components/auth/login-form.css
+}

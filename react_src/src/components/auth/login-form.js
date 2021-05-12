@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import './login-form.css';
-import axios from "axios";
+import ButtonPrimary from '../button'
+import './auth-form.css'
+import axios from "axios"
 
 export default function LoginForm() {
 
@@ -38,26 +39,29 @@ export default function LoginForm() {
 
     return (
         <div className='LoginForm'>
-            <h2>Inscription / Connexion</h2>
+            <div className="titles-form">
+                <span className="login-title">Connexion</span>
+                <span>/</span>
+                <a href="/register" className="register-title">Inscription</a>
+            </div>
+
             <form action="">
-                <div className='identifiant'>
-                    <label htmlFor="">Identifiant</label>
-                    <input type="text"
-                           value={inputValueUN}
-                           onChange={(e) => {
-                               setInputValueUN(e.target.value);
-                           }}
-                    />
+                <fieldset className='identifiant'>
+                    <label className="inputs-label" htmlFor="">Identifiant</label>
+                    <input className="input-form" value={inputValueUN} onChange={(e) => setInputValueUN(e.target.value)} type="text"/>
+                    <label className="inputs-label" htmlFor="">Mot de passe</label>
+                    <input className="input-form" type="password" value={inputValuePW} onChange={(e) => setInputValueUN(e.target.value)} />
+                </fieldset>
+
+                <div className='content-btn-submit'>
+                    <ButtonPrimary text='connexion' />
                 </div>
 
-                <div className='password'>
-                    <label htmlFor="">Mot de passe</label>
-                    <input type="password"
-                           value={inputValuePW}
-                           onChange={(e) => {
-                               setInputValuePW(e.target.value);
-                           }}
-                    />
+                <div className="footer-form">
+                    <div className="account">
+                        <span className="allready-account">Vous n'avez pas de compte ?</span>
+                        <a className="connexion" href="/register">Inscrivez-vous</a>
+                    </div>
                 </div>
             </form>
 
