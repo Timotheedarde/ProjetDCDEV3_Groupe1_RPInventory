@@ -8,7 +8,6 @@ export default function Login() {
         <div className='login'>
             <Illustration />
             <div className='LoginFormContainer'>
-                <h1>Se connecter</h1>
                 <LoginForm />
             </div>
         </div>
