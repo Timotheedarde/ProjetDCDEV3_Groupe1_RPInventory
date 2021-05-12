@@ -1,0 +1,17 @@
+.login {
+    width: 100%;
+    height: 100vh;
+    display: grid;
+    grid-template: auto / 1fr auto;
+    overflow: hidden;
+}
+
+.LoginFormContainer {
+    width: 45vw;
+}
+
+.illustration-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}

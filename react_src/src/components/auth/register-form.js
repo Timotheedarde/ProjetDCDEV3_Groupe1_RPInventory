@@ -1,13 +1,14 @@
-import React from 'react';
-import './register-form.css';
+import React from 'react'
+import ButtonPrimary from '../button'
+import './auth-form.css'
 
 export default function RegisterForm() {
     return (
-        <div className='RegisterForm'>
+        <div className='LoginForm'>
             <div className="titles-form">
-                <span className="register-title">Inscription</span>
+                <a href="/" className="register-title">Connexion</a>
                 <span>/</span>
-                <span className="login-title">Connexion</span>
+                <span className="login-title">Inscription</span>
             </div>
 
             <form action="">
@@ -21,33 +22,11 @@ export default function RegisterForm() {
                     <input className="input-form" type="password"/>
                 </div>
 
-                <div className="majeur">
-                    <input className="checkbox" type="checkbox" name="" id=""/>
-                    <label className="label-checkbox" htmlFor="">
-                        Je certifie avoir plus de 18 ans et j’accepte les <span className="conditions">conditions d’utilisations</span>  ainsi que la  <span className="conditions">politique de confidentialité</span>.
-                    </label>
-                </div>
-
-                <div className="newsletter">
-                    <input className="checkbox" type="checkbox" name="" id=""/>
-                    <label className="label-checkbox" htmlFor="">Je veux recevoir par email les nouveautés du jeu et les offres promotionnelles. </label>
-                </div>
-
-                <div>
-                    <button className="button-submit">INSCRIPTION</button>
+                <div className='content-btn-submit'>
+                    <ButtonPrimary text='Inscription' />
                 </div>
 
                 <div className="footer-form">
-                    <span className="social-register">
-                    Ou avec les réseaux sociaux
-                    </span>
-
-                    <div className="button-grp">
-                        <button>G</button>
-                        <button>F</button>
-                        <button>T</button>
-                    </div>
-
                     <div className="account">
                         <span className="allready-account">Vous avez déjà un compte ?</span>
                         <a className="connexion" href="/">Connectez-vous</a>

@@ -1,0 +1,17 @@
+
+.illustration-perso {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100vh;
+    object-fit: contain;
+    top: 0;
+    left: 0;
+}
+
+.illustration-bg {
+    mix-blend-mode: saturation;
+    width: 85%;
+    height: 100%;
+    object-fit: cover;
+}

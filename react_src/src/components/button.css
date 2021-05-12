@@ -1,0 +1,16 @@
+.button-primary {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    text-transform: uppercase;
+    color: white;
+    background-color: #2656F4;
+    border:none;
+    padding: 10px 50px 10px;
+    border-radius: 5px;
+    font-size: 26px;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    letter-spacing: normal;
+}

@@ -1,22 +1,42 @@
-.RegisterForm {
+.LoginForm {
     color:white;
-    margin: 40px
+    margin: 40px;
+    height: 100%;
+    padding: 50px;
+}
+form
+{
+    padding-top: 200px;
+}
+fieldset
+{
+    border: none;
+    margin: 0;
+    padding: 0;
 }
 .titles-form {
     text-transform: uppercase;
     font-size: 22px;
 }
-.register-title {
+.login-title {
     font-weight: 700;
 }
-.login-title {
+.register-title {
     font-weight: 400;
+}
+.login-title,
+.register-title
+{
+    color: white;
+    text-decoration: none;
+    font-size: 22px;
 }
 .identifiant {
     display: flex;
     flex-direction: column;
 }
 .inputs-label {
+    padding-top: 20px;
     font-size: 22px;
 }
 .password {
@@ -27,8 +47,10 @@
 .input-form {
     height: 30px;
     border: none;
-    border-radius: 5px;
+    border-radius: 2px;
+    padding: 10px 20px;
     margin-top: 5px;
+    font-size: 1.1em;
 }
 .checkbox {
     margin: 0 20px 0 0;
@@ -52,23 +74,11 @@
     justify-content: center;
     margin: 20px 0 20px;
 }
-.button-submit {
-    display: block;
-    margin: 0 auto;
-    width: 100%;
-    text-transform: uppercase;
-    color: white;
-    background-color: #2656F4;
-    border:none;
-    padding: 10px 50px 10px;
-    border-radius: 5px;
-    font-size: 26px;
-    font-weight: 600;
-    letter-spacing: 3px;
-    cursor: pointer;
+.content-btn-submit {
+    padding-top: 100px;
 }
 .footer-form {
-    margin-top: 20px;
+    padding-top: 50px;
 }
 .social-register {
     display: flex;
@@ -92,10 +102,4 @@
 .connexion {
     color: white;
     font-weight: 600;
-}
-
-
-/* DESKTOP */
-@media screen and (min-width: 960px) {
-
 }

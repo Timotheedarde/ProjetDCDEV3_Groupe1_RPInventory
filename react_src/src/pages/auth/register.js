@@ -1,13 +1,14 @@
 import React from 'react';
-import './register.css';
-import RegisterForm from "../../components/auth/register-form";
+import './auth.css';
+import Illustration from '../../components/auth/illustration'
+import RegisterForm from "../../components/auth/register-form"
 
 export default function Register() {
     return (
-        <div className='register'>
-            <div className='image-container'/>
-            <div className='RegisterFormContainer'>
-                <RegisterForm/>
+        <div className='login'>
+            <Illustration />
+            <div className='LoginFormContainer'>
+                <RegisterForm />
             </div>
         </div>
     );
