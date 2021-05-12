@@ -50,11 +50,11 @@ export default function LoginForm() {
                     <label className="inputs-label" htmlFor="">Identifiant</label>
                     <input className="input-form" value={inputValueUN} onChange={(e) => setInputValueUN(e.target.value)} type="text"/>
                     <label className="inputs-label" htmlFor="">Mot de passe</label>
-                    <input className="input-form" type="password" value={inputValuePW} onChange={(e) => setInputValueUN(e.target.value)} />
+                    <input className="input-form" type="password" value={inputValuePW} onChange={(e) => setInputValuePW(e.target.value)} />
                 </fieldset>
 
                 <div className='content-btn-submit'>
-                    <ButtonPrimary text='connexion' />
+                    <ButtonPrimary onClick={handleLogin} text='connexion' />
                 </div>
 
                 <div className="footer-form">
@@ -64,8 +64,6 @@ export default function LoginForm() {
                     </div>
                 </div>
             </form>
-
-            <button onClick={handleLogin}>Login</button>
         </div>
     );
 }

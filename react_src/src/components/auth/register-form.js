@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ButtonPrimary from '../button'
 import './auth-form.css'
+import axios from "axios"
 
 export default function RegisterForm() {
 
@@ -52,7 +53,7 @@ export default function RegisterForm() {
 
                 <div className='password'>
                     <label className="inputs-label" htmlFor="">Mot de passe</label>
-                    <input className="input-form" type="password"/>
+                    <input className="input-form" type="password" value={inputValuePW} onChange={(e) => setInputValuePW(e.target.value)} />
                 </div>
 
                 <div className='content-btn-submit'>
