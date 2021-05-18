@@ -15,6 +15,7 @@ const { ObjectId } = require("mongodb");
 const corsOptions = {
   origin: ["http://localhost:3000"],
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  credentials: true,
 };
 
 const verifySession = (req, res, next) => {
@@ -32,15 +33,13 @@ const verifySession = (req, res, next) => {
 app.use(session({
   secret:'Keep it secret',
   name:'uniqueSessionID',
-  resave:false,
   saveUninitialized:false}));
 
 app.use(cors(corsOptions));
 app.use(express.json());
 
-app.get('/', function (req, res) {
-  res.send('Hello World!')
-
+app.get('/',verifySession, function (req, res) {
+  res.send(req.session.savedDocuments);
 })
 
 /*app.get('/todo', async (req, res) => {
@@ -59,6 +58,7 @@ app.get('/', function (req, res) {
 })*/
 
 /*************************************************/
+//Récupère la liste des users
 
 app.get("/auth/users", async (req, res) => {
   try {
@@ -80,43 +80,7 @@ app.get("/auth/users", async (req, res) => {
   }
 });
 
-/*
-app.get("/auth/user", async (req, res) => {
-  let userExist = req.body;
-
-  try {
-    const options = {
-      projection: { username: 1 },
-    };
-    let { db_client, db_connection } = await connect();
-
-    try {
-      let user = await db_connection
-          .collection("users")
-          .findOne({ username: userExist.username },options);
-
-      if (user) {
-        throw new Error("User already exists");
-      }
-
-      res.send("Username available");
-      console.log("Username available")
-
-    } catch (err) {
-      res.status(400);
-      res.send(err.message)
-      console.log(err.message)
-
-    }
-  } catch (err) {
-    res.status(500);
-    console.log("Server error")
-    res.send("Server error");
-  }
-});
-*/
-
-
+//Ajouter un user dans la liste des users, controle si existe deja en BDD
 app.post("/auth/signup", async (req, res) => {
   let newUser = req.body;
 
@@ -152,6 +116,7 @@ app.post("/auth/signup", async (req, res) => {
   }
 });
 
+//Fonction de login, creation de session avec le username / controle du mdp
 app.post("/auth/login", async (req, res) => {
 
   try {
@@ -177,6 +142,8 @@ app.post("/auth/login", async (req, res) => {
 
       res.send("Logged in");
 
+      console.log(req.session.user_id)
+
     } catch(err) {
       res.status(403);
       console.log(err.message);
@@ -191,6 +158,7 @@ app.post("/auth/login", async (req, res) => {
 
 })
 
+//Fonction de logout, fin de session
 app.post('/auth/logout', (req, res) => {
   req.session.destroy((err) => {
     if(err) {
@@ -205,28 +173,163 @@ app.post('/auth/logout', (req, res) => {
 
 /*************************************************/
 
+//Récupère la liste de personnages d'un user particulier
+app.get("/personges/user", /*verifySession,*/ async (req, res) => {
+  try {
+    const username = req.session.username;
 
-app.post('/personage',verifySession, async (req, res) => {
-  let {db_client, db_connection} = await connect()
-  db_connection.collection('personage').find({}).toArray((err, result) => {
-    if(err) return console.log(err)
-    db_client.close()
-    res.send(result)
-  })
+    let { db_client, db_connection } = await connect();
+    db_connection
+        .collection("personages")
+        .find({ created_by: username })
+        .toArray((err, result) => {
+          if (err) return console.log(err);
+
+          console.log("personages :", result);
+
+          db_client.close();
+          res.send(result);
+        });
+  } catch (err) {
+    res.status(500);
+    res.send("Server error");
+  }
+});
+
+
+//Ajoute un Personnage dans la BDD (avec username de session)
+
+app.post('/personage/user',/*verifySession,*/ async (req,res)=>{
+
+  try {
+    const username = req.session.username;
+    req.body.created_by = username;
+    let newPersonage = req.body;
+    //console.log(personage_Obj);
+    let {db_client, db_connection} = await connect()
+
+    try {
+      let personage_Exist = await db_connection.collection("personages").findOne({name: newPersonage.name, created_by:username});
+      if (personage_Exist) {
+        throw new Error("Vous possédez déjà un personnage du même nom");
+      }
+
+      await db_connection.collection("personages").insertOne(newPersonage);
+
+      res.send("Personnage Ajouté");
+      console.log("Ajout de personage en BDD")
+    }
+    catch(err) {
+      res.status(403);
+      res.send("Invalid credentials");
+    }
+  }catch (err) {
+    res.status(500);
+    res.send("Server error");
+  }
+
 })
 
-app.get('/inventory',verifySession, async (req, res) => {
-  let {db_client, db_connection} = await connect()
-  db_connection.collection('inventory').find({}).toArray((err, result) => {
-    if(err) return console.log(err)
-    db_client.close()
-    res.send(result)
-  })
-})
+//Mettre à jour Personnage suivant username
 
-app.get('/item',verifySession, async (req, res) => {
+app.post("/personnage/:id", verifySession, async (req, res, next) => {
+  console.log("update");
+  console.log(req.params.id);
+  console.log(req.body);
+
+  try {
+    let { db_client, db_connection } = await connect();
+
+    const username = req.session.username;
+
+    let result = await db_connection.collection("personages").updateOne(
+        { _id: ObjectId(req.params.id), created_by: username },
+        {
+          $set: req.body,
+        }
+    );
+    if (result.matchedCount === 0) {
+      next({ code: 400, message: "No personage was updated" });
+    } else {
+      res.send("ok");
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500);
+    res.send("Server error");
+  }
+});
+
+//Delete 1 seul Personage suivant son id (avec username)
+app.delete("/personage/one/:id", verifySession, async (req, res, next) => {
+  console.log("one");
+
+  let { db_client, db_connection } = await connect();
+
+  try {
+
+    const username = req.session.username;
+
+    let result = await db_connection
+        .collection("personnages")
+        .deleteOne({ _id: ObjectId(req.params.id), created_by: username});
+
+    if (result.deletedCount === 0) {
+      next({ code: 400, message: "No task was deleted" });
+    } else {
+      res.send("ok");
+    }
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+});
+
+// Delete tous les personnages d'un user
+app.delete("/personages/many/:status", verifySession, async (req, res, next) => {
+  let { db_client, db_connection } = await connect();
+
+  console.log("many");
+
+  try {
+    const username = req.session.username;
+
+    let filter = {created_by: username}; //all
+
+    if (req.params.status !== "all") {
+      throw new Error("Operation does not exist");
+    }
+
+    db_connection
+        .collection("personages")
+        .find(filter)
+        .toArray(async (err, documentsToBeDeleted) => {
+          if (err) return next(err);
+
+          console.log(documentsToBeDeleted);
+
+          req.session.savedDocuments = documentsToBeDeleted;
+
+          console.log(req.session);
+          console.log(req.session.savedDocuments);
+
+          let result = await db_connection.collection("tasks").deleteMany(filter);
+        });
+
+    res.send("ok");
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+});
+
+
+/*************************************************/
+//Récupère la liste des items (Tous ceux de la BDD)
+
+app.get('/items', async (req, res) => {
   let {db_client, db_connection} = await connect()
-  db_connection.collection('item').find({}).toArray((err, result) => {
+  db_connection.collection('items').find({}).toArray((err, result) => {
     if(err) return console.log(err)
     db_client.close()
     res.send(result)
