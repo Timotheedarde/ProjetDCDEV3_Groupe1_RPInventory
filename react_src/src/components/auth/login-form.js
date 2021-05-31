@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ButtonPrimary from '../button'
 import './auth-form.css'
 import axios from "axios"
+import illustrationPerso from '../../assets/img/illustrations/illu-perso.png'
 
 export default function LoginForm() {
 
@@ -56,6 +57,8 @@ export default function LoginForm() {
                 <div className='content-btn-submit'>
                     <ButtonPrimary onClick={handleLogin} text='connexion' />
                 </div>
+
+                <img src={illustrationPerso} alt='illustration personnage' className='illustration-perso-mobile' />
 
                 <div className="footer-form">
                     <div className="account">
