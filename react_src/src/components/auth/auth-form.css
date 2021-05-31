@@ -52,58 +52,25 @@ fieldset
     margin-top: 5px;
     font-size: 1.1em;
 }
-.checkbox {
-    margin: 0 20px 0 0;
-}
-.label-checkbox {
-    font-size: 14px;
-    font-weight: 200;
-}
-.majeur {
-    display: flex;
-    align-items: start;
-    justify-content: center;
-}
-.conditions {
-    text-decoration: underline;
-    cursor: pointer;
-}
-.newsletter {
-    display: flex;
-    align-items: start;
-    justify-content: center;
-    margin: 20px 0 20px;
-}
 .content-btn-submit {
     padding-top: 100px;
 }
 .footer-form {
     padding-top: 50px;
 }
-.social-register {
-    display: flex;
-    justify-content: center;
-    color: #B2B2B2;
-}
-.button-grp {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 20px 0 20px;
-}
 .account {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-.allready-account {
-    color: #B2B2B2;
 }
 .connexion {
     color: white;
     font-weight: 600;
 }
 
+
+/* DESKTOP */
+@media screen and (min-width: 960px) {
 .illustration-perso-mobile {
     display: none;
     width: 150px;
@@ -136,5 +103,4 @@ fieldset
     .illustration-perso-mobile {
         display: block;
     }
-
 }
