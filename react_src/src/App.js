@@ -20,6 +20,9 @@ function App() {
             <Route exact path="/">
                 <Page_Login/>
             </Route>
+            <Route exact path="/personnage">
+                <div>Page de personnages</div>
+            </Route>
         </Switch>
     </Router>
   );

@@ -1,40 +1,42 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router";
 import ButtonPrimary from '../button'
 import './auth-form.css'
 import axios from "axios"
 
+
 export default function RegisterForm() {
 
-    const [users, setUsers] = useState([]);
+    const history = useHistory();
+    const [loginData, setLoginData] = useState({});
 
-    const [inputValueUN, setInputValueUN] = useState("");
-    const [inputValuePW, setInputValuePW] = useState("");
 
-    const handleRegister = () => {
-        let newUser = { username: inputValueUN, password: inputValuePW };
+    const handleChange = (attr) => (e) => {
+        const value = e.target.value;
 
+        const newLoginData = { ...loginData, [attr]: value };
+        setLoginData(newLoginData);
+        //console.log(newLoginData)
+    };
+
+    const handleSignup = async (e) => {
+        e.preventDefault(); //annule comportement par défaut du submit
         axios
-            .post("http://localhost:3001/auth/signup", newUser)
-            .then((response) => {
-                newUser._id = response.data;
-                let newUsers = [...users, newUser];
-                setUsers(newUsers);
+            .post("http://localhost:3001/auth/signup", loginData, {
+                withCredentials: true,
+            })
+            .then(() => {
+                history.push("/");
             })
             .catch((err) => {
-                if(err.response.status === 400 ){
+                if (err.response && err.response.status === 403) {
+                    alert("Invalid credentials");
+                } else {
                     alert(
-                        err.response.data
-                    );
-                } else{
-                    console.log(err)
-                    alert(
-                        "Une erreur est survenue, veuillez réessayer ultérieurement."
+                        "An unexpected error happened, we are sorry for the inconvenience"
                     );
                 }
             });
-
-        setInputValueUN("");
-        setInputValuePW("");
     };
 
     return (
@@ -45,19 +47,19 @@ export default function RegisterForm() {
                 <span className="login-title">Inscription</span>
             </div>
 
-            <form action="">
+            <form onSubmit={handleSignup}>
                 <div className='identifiant'>
                     <label className="inputs-label" htmlFor="">Identifiant</label>
-                    <input className="input-form" type="text" value={inputValueUN} onChange={(e) => setInputValueUN(e.target.value)} />
+                    <input className="input-form" type="text"  value={loginData.username} onChange={handleChange("username")} />
                 </div>
 
                 <div className='password'>
                     <label className="inputs-label" htmlFor="">Mot de passe</label>
-                    <input className="input-form" type="password" value={inputValuePW} onChange={(e) => setInputValuePW(e.target.value)} />
+                    <input className="input-form" type="password" value={loginData.password} onChange={handleChange("password")} />
                 </div>
 
                 <div className='content-btn-submit'>
-                    <ButtonPrimary onClick={handleRegister} text='Inscription' />
+                    <ButtonPrimary text='Inscription' />
                 </div>
 
                 <div className="footer-form">

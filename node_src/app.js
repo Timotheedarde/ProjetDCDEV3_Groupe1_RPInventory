@@ -139,7 +139,7 @@ app.post("/items", /*verifySession,*/ async (req, res, next) => {
 
 
 
-//Modifie un item en Global
+//Modifie un item par id
 app.post("/item/:id",  async (req, res, next) => {
 
   console.log("update");
@@ -213,7 +213,7 @@ app.delete("/items/one/:id",  async (req, res, next) => {
 
 //Récupère la liste des users
 
-app.get("/auth/users", async (req, res) => {
+/*app.get("/auth/users", async (req, res) => {
   try {
     let { db_client, db_connection } = await connect();
     db_connection
@@ -231,11 +231,13 @@ app.get("/auth/users", async (req, res) => {
     res.status(500);
     res.send("Server error");
   }
-});
+});*/
 
-//Ajouter un user dans la liste des users, controle si existe deja en BDD
+//S'enregistrer
 app.post("/auth/signup", async (req, res) => {
+
   let newUser = req.body;
+  console.log(newUser)
 
   try {
     let { db_client, db_connection } = await connect();
@@ -249,79 +251,79 @@ app.post("/auth/signup", async (req, res) => {
         throw new Error("User already exists");
       }
 
-      newUser.password = await bcrypt.hash(newUser.password, 10)
+      newUser.password = await bcrypt.hash(newUser.password, 10);
 
       await db_connection.collection("users").insertOne(newUser);
 
       res.send("User successfuly signed up");
-      console.log("singup ok")
-
+      console.log("singup ok");
     } catch (err) {
       res.status(400);
-      res.send(err.message)
-      console.log(err.message)
-
+      res.send(err.message);
+      console.log(err.message);
     }
   } catch (err) {
     res.status(500);
-    console.log("Server error")
+    console.log("Server error");
     res.send("Server error");
   }
 });
 
-//Fonction de login, creation de session avec le username / controle du mdp
+//se connecter
 app.post("/auth/login", async (req, res) => {
-
   try {
     const loginData = req.body;
 
     let { db_client, db_connection } = await connect();
 
-    let user = await db_connection.collection("users").findOne({username: loginData.username});
+    let user = await db_connection
+        .collection("users")
+        .findOne({ username: loginData.username });
     try {
-      if(!user) {
+      if (!user) {
         throw new Error("Invalid username");
       }
 
+      const samePassword = await bcrypt.compare(
+          loginData.password,
+          user.password
+      );
 
-      const samePassword = await bcrypt.compare(loginData.password, user.password);
-
-      if(!samePassword) {
-        throw new Error("Invalid password")
+      if (!samePassword) {
+        throw new Error("Invalid password");
       }
 
       req.session.username = user.username;
       req.session.loggedIn = true;
 
       res.send("Logged in");
-
-      console.log(req.session.user_id)
-
-    } catch(err) {
+    } catch (err) {
       res.status(403);
       console.log(err.message);
-      res.send("Invalid credentials")
+      res.send("Invalid credentials");
     }
-
-  } catch(err) {
+  } catch (err) {
     res.status(500);
     res.send("Server error");
   }
+});
 
+//Verifier si utilisateur est authentifié
+app.get("/auth/check", verifySession, (req, res) => res.send("Authenticated"));
 
-})
-
-//Fonction de logout, fin de session
-app.post('/auth/logout', (req, res) => {
+//deconnexion / fin session
+app.post("/auth/logout", (req, res) => {
   req.session.destroy((err) => {
-    if(err) {
+    if (err) {
+      console.log(err);
       res.status(500);
-      res.send("An error occured while logging out")
+      res.send("An error occured while logging out");
     } else {
-      res.send("Logged out")
+      console.log("Logged out");
+      res.send("Logged out");
     }
-  })
-})
+  });
+});
 
 
 /*************************************************/
