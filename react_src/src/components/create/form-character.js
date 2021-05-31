@@ -1,7 +1,6 @@
 import React from 'react';
 import './form-character.css';
 
-
 class FormCharacter extends React.Component {
     render() {
         return (

@@ -7,6 +7,7 @@ import {
 import Page_Login from './pages/auth/login';
 import Page_Register from './pages/auth/register';
 import Page_Personnage from './pages/personnage';
+import Page_Sandbox from './pages/sandbox';
 
 import './App.css';
 
@@ -15,6 +16,9 @@ function App() {
   return (
     <Router>
         <Switch>
+            <Route exact path="/sandbox">
+                <Page_Sandbox/>
+            </Route>
             <Route exact path="/personnage">
                 <Page_Personnage/>
             </Route>
