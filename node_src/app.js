@@ -33,6 +33,7 @@ const verifySession = (req, res, next) => {
 app.use(session({
   secret:'Keep it secret',
   name:'uniqueSessionID',
+  resave: true,
   saveUninitialized:false}));
 
 app.use(cors(corsOptions));
@@ -58,6 +59,158 @@ app.get('/',verifySession, function (req, res) {
 })*/
 
 /*************************************************/
+//ITEMS
+//Récupere TOUS les items (Global)
+app.get("/items", async(req,res)=>{
+  try {
+    let { db_client, db_connection } = await connect();
+    db_connection
+        .collection('items')
+        .find()
+        .toArray((err, result) => {
+          if (err) return console.log(err);
+
+          console.log("items :", result);
+
+          db_client.close();
+          res.send(result);
+        });
+
+  } catch (e) {
+    res.status(500);
+    res.send("Server error");
+  }
+
+});
+
+//Récupere 1 item en particulier, ID en parametre (En global)
+app.get("/item/:id", async(req,res)=>{
+  let idItem = req.params.id;
+  //console.log(idItem)
+  try {
+    let { db_client, db_connection } = await connect();
+    db_connection
+        .collection('items')
+        .find(
+            {_id: ObjectId(idItem)}
+        )
+        .toArray((err, result) => {
+          if (err) return console.log(err);
+
+          console.log("item :", idItem , result);
+
+          db_client.close();
+          res.send(result);
+        });
+
+  } catch (e) {
+    res.status(500);
+    res.send("Server error");
+  }
+});
+
+
+//Ajoute un Item selon Le personnage et le user
+app.post("/items", /*verifySession,*/ async (req, res, next) => {
+  //console.log("insertion");
+  //console.log("body : ", req.body);
+
+  try {
+    let { db_client, db_connection } = await connect();
+
+    const username = req.session.username;
+    req.body.created_by = username;
+
+    db_connection
+        .collection("tasks")
+        .insertOne(req.body)
+        .then((result) => {
+          console.log("result : ", result);
+          res.send(result.insertedId);
+        })
+        .catch((err) => {
+          next(err);
+        });
+  } catch (err) {
+    res.status(500);
+    res.send("Server Error");
+  }
+});
+
+
+
+//Modifie un item en Global
+app.post("/item/:id",  async (req, res, next) => {
+
+  console.log("update");
+  console.log(req.params.id)
+  console.log(req.body)
+
+  let { db_client, db_connection } = await connect();
+
+  try {
+    let result = await db_connection
+        .collection("items")
+        .updateOne(
+            {_id: ObjectId(req.params.id)},
+            {
+              $set: req.body
+            }
+        )
+    if(result.matchedCount === 0) {
+      next({code: 400, message: "No items was updated, id doesn't exist"})
+    } else {
+      res.send("ok")
+    }
+  } catch(err) {
+    console.log(err);
+    next(err)
+  }
+})
+
+//Supprime TOUS les items en global
+app.delete("/items/",  async (req, res, next) => {
+  let { db_client, db_connection } = await connect();
+
+  try {
+    let result = await db_connection
+        .collection("items")
+        .deleteMany({})
+
+    res.send("ok")
+  } catch(err) {
+    console.log(err);
+    next(err)
+  }
+})
+
+//Supprime Item par ID
+app.delete("/items/one/:id",  async (req, res, next) => {
+  console.log("one")
+
+  let { db_client, db_connection } = await connect();
+
+  try {
+    let result = await db_connection
+        .collection("items")
+        .deleteOne({_id: ObjectId(req.params.id)})
+
+    if(result.deletedCount === 0) {
+      next({code: 400, message: "No task was deleted"})
+    } else {
+      res.send("ok")
+    }
+  } catch(err) {
+    console.log(err);
+    next(err)
+  }
+})
+
+/*************************************************/
+/*************************************************/
+/*************************************************/
+/*************************************************/
+
 //Récupère la liste des users
 
 app.get("/auth/users", async (req, res) => {
@@ -172,14 +325,18 @@ app.post('/auth/logout', (req, res) => {
 
 
 /*************************************************/
+/*************************************************/
+/*************************************************/
+/*************************************************/
 
 //Récupère la liste de personnages d'un user particulier
-app.get("/personges/user", /*verifySession,*/ async (req, res) => {
+app.get("/personages/", /*verifySession,*/ async (req, res) => {
   try {
     const username = req.session.username;
 
     let { db_client, db_connection } = await connect();
     db_connection
+
         .collection("personages")
         .find({ created_by: username })
         .toArray((err, result) => {
@@ -199,7 +356,7 @@ app.get("/personges/user", /*verifySession,*/ async (req, res) => {
 
 //Ajoute un Personnage dans la BDD (avec username de session)
 
-app.post('/personage/user',/*verifySession,*/ async (req,res)=>{
+app.post('/personage',/*verifySession,*/ async (req,res)=>{
 
   try {
     const username = req.session.username;
@@ -232,7 +389,7 @@ app.post('/personage/user',/*verifySession,*/ async (req,res)=>{
 
 //Mettre à jour Personnage suivant username
 
-app.post("/personnage/:id", verifySession, async (req, res, next) => {
+app.post("/personage/:id", verifySession, async (req, res, next) => {
   console.log("update");
   console.log(req.params.id);
   console.log(req.body);
@@ -323,20 +480,69 @@ app.delete("/personages/many/:status", verifySession, async (req, res, next) => 
   }
 });
 
+//Récupere l'attribut liste d'id_items d'un personnage
+app.get("/personage_inventory/:id", /*verifySession,*/ async (req, res) => {
+  const idPersonage = req.params.id
+  //console.log(idPersonage);
+  try {
+    let { db_client, db_connection } = await connect();
+    db_connection
+        .collection("personages")
+        .find(
+            {_id: ObjectId(idPersonage)}
+        )
+        .toArray((err, result) => {
+          if (err) return console.log(err);
 
-/*************************************************/
-//Récupère la liste des items (Tous ceux de la BDD)
+          console.log("Inventaire du personage :", result[0].items_id_list);
 
-app.get('/items', async (req, res) => {
-  let {db_client, db_connection} = await connect()
-  db_connection.collection('items').find({}).toArray((err, result) => {
-    if(err) return console.log(err)
-    db_client.close()
-    res.send(result)
-  })
-})
+          db_client.close();
+          res.send(result[0].items_id_list);
+        });
+  } catch (err) {
+    res.status(500);
+    res.send("Server error");
+  }
+});
 
+//Mettre à jour Personnage suivant ID
+
+app.post("/personage_inventory/:id", /*verifySession,*/ async (req, res, next) => {
+  //console.log("update");
+  //console.log(req.params.id);
+  //console.log(req.body);
+
+  try {
+    let { db_client, db_connection } = await connect();
+
+    let result = await db_connection.collection("personages").updateOne(
+        { _id: ObjectId(req.params.id) },
+        {
+          $set: req.body,
+        }
+    );
+    if (result.matchedCount === 0) {
+      next({ code: 400, message: "No personage was updated" });
+    } else {
+      res.send("ok");
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500);
+    res.send("Server error");
+  }
+});
+
+
+
+
+
+
+
+
+
+
+/**************************************/
 app.listen(config.port, function () {
-  console.log(`Example app listening on port ${config.port} !`)
-})
-
+  console.log(`Example app listening on port ${config.port} !`);
+});
