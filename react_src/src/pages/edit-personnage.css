@@ -1,0 +1,33 @@
+.prez-perso
+{
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.prez-perso-txt
+{
+    font-size: 1em;
+    color: white;
+}
+
+.prez-perso-txt span
+{
+    font-weight: 700;
+}
+
+.prez-perso-img
+{
+    height: 100px;
+    width: 100px;
+    object-fit: contain;
+    margin-top: 20px;
+    background-color: white;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.main-edit-personnage
+{
+    padding: 0 10px 50px;
+}
