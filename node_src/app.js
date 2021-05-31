@@ -358,11 +358,13 @@ app.get("/personages/", /*verifySession,*/ async (req, res) => {
 
 //Ajoute un Personnage dans la BDD (avec username de session)
 
-app.post('/personage',/*verifySession,*/ async (req,res)=>{
+app.post('/personnage',verifySession, async (req,res)=>{
 
   try {
     const username = req.session.username;
     req.body.created_by = username;
+    req.body.carry_actual = 0;
+    req.body.inventory_list = [];
     let newPersonage = req.body;
     //console.log(personage_Obj);
     let {db_client, db_connection} = await connect()

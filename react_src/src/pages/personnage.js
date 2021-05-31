@@ -3,40 +3,33 @@ import './personnage.css';
 import Header from "../components/Header";
 import Button from '../components/button'
 import {Link} from "react-router-dom";
+import useLogin from "../components/auth/hooks/useLogin"
+import {useHistory} from "react-router";
+
+
 import FormCharacter from "../components/create/form-character";
 
 
-class Personnage extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { show: true };
+export default function Personnage(props) {
+
+    const [authenticated, setAnthenticated] = useLogin();
+    const history = useHistory();
+
+    if (authenticated) {
+        history.push("/personnage");
     }
 
-    render() {
-        return <div>
+
+
+    return (
+        <div>
             <div>
                 <Header appName="RP Inventory"/>
-                <Button onClick={ () => this.setState({ show: !this.state.show } ) } text="créer nouveau personnage"/>
-                <span className="noPerso">Vous n'avez pas encore de personnage</span>
-                { this.state.show ? <FormCharacter /> : null }
+                <Button text="créer nouveau personnage"/>
+                <FormCharacter/>
             </div>
         </div>
-    }
+    )
+
+
 }
-
-// export default function Personnage() {
-//     return (
-//         <div>
-//             <Header appName="RP Inventory"/>
-//             <Link className="link" to="#">
-//                 <Button text='Créer nouveau personnage'/>
-//             </Link>
-//             <span className="noPerso">
-//                 Vous n'avez pas encore de personnage
-//             </span>
-//             <FormCharacter />
-//         </div>
-//     );
-// }
-
-export default Personnage;
