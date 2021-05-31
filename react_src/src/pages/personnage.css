@@ -1,0 +1,13 @@
+.noPerso {
+    color: rgba(255, 255, 255, .8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    margin: 20px;
+}

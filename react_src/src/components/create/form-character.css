@@ -1,0 +1,63 @@
+.section {
+    color: white;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 20px;
+}
+
+.global-create {
+    padding: 20px;
+    background-color: #21242C;
+    margin: 20px;
+    border-radius: 20px;
+}
+
+.formulaire {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin: 20px;
+    padding: 0;
+}
+
+.inputs {
+    height: 30px;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 5px 0 20px;
+    font-size: 1.1em;
+}
+
+.labels {
+    color: white;
+}
+
+.file {
+    margin-top: 5px;
+}
+
+.buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px;
+}
+
+.delete {
+    padding: 0;
+    background: none;
+    border: none;
+    color: gray;
+    cursor: pointer;
+}
+
+.next {
+    text-transform: uppercase;
+    color: white;
+    background-color: #78AB6F;
+    padding: 10px 20px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

@@ -3,6 +3,7 @@ import { useHistory } from "react-router";
 import ButtonPrimary from '../button'
 import './auth-form.css'
 import axios from "axios"
+import illustrationPerso from '../../assets/img/illustrations/illu-perso.png'
 
 
 export default function RegisterForm() {
@@ -61,6 +62,8 @@ export default function RegisterForm() {
                 <div className='content-btn-submit'>
                     <ButtonPrimary text='Inscription' />
                 </div>
+
+                <img src={illustrationPerso} alt='illustration personnage' className='illustration-perso-mobile' />
 
                 <div className="footer-form">
                     <div className="account">
