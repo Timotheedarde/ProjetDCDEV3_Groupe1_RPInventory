@@ -25,6 +25,7 @@ export default function FormCharacter(props) {
             })
             .then(() => {
                 history.push("/personnage");
+                props.onUpdatePersonnage();
             })
             .catch((err) => {
                 if (err.response && err.response.status === 403) {

@@ -111,18 +111,42 @@ app.get("/item/:id", async(req,res)=>{
 
 
 //Ajoute un Item selon Le personnage et le user
-app.post("/items", /*verifySession,*/ async (req, res, next) => {
-  //console.log("insertion");
-  //console.log("body : ", req.body);
+app.post("/items/:id_personnage", verifySession, async (req, res, next) => {
+
+  //1 find si le personnage appartient à l'utilisateur connecté findOne sur id du personnage
+  //2 inserer l'item en base avec ses caracteristiques
+  //3 modifier la liste d'id du personnage en y ajoutant l'id de l'item nouvellement crée.
+
+  const session = client.startSession();
+  // Step 2: Optional. Define options to use for the transaction
+  const transactionOptions = {
+    readPreference: 'primary',
+    readConcern: { level: 'local' },
+    writeConcern: { w: 'majority' }
+  };
+  // Step 3: Use withTransaction to start a transaction, execute the callback, and commit (or abort on error)
+  // Note: The callback for withTransaction MUST be async and/or return a Promise.
+  try {
+    await session.withTransaction(async () => {
+      const coll1 = client.db('mydb1').collection('foo');
+      const coll2 = client.db('mydb2').collection('bar');
+      // Important:: You must pass the session to the operations
+      await coll1.insertOne({ abc: 1 }, { session });
+      await coll2.insertOne({ xyz: 999 }, { session });
+    }, transactionOptions);
+  } finally {
+    await session.endSession();
+    await client.close();
+  }
+
 
   try {
     let { db_client, db_connection } = await connect();
 
-    const username = req.session.username;
-    req.body.created_by = username;
+    const userId = req.session.userId;
 
     db_connection
-        .collection("tasks")
+        .collection("items")
         .insertOne(req.body)
         .then((result) => {
           console.log("result : ", result);
@@ -293,7 +317,7 @@ app.post("/auth/login", async (req, res) => {
         throw new Error("Invalid password");
       }
 
-      req.session.username = user.username;
+      req.session.userId = user._id;
       req.session.loggedIn = true;
 
       res.send("Logged in");
@@ -332,19 +356,19 @@ app.post("/auth/logout", (req, res) => {
 /*************************************************/
 
 //Récupère la liste de personnages d'un user particulier
-app.get("/personages/", /*verifySession,*/ async (req, res) => {
+app.get("/personnages/", verifySession, async (req, res) => {
   try {
-    const username = req.session.username;
+    const userId = req.session.userId;
 
     let { db_client, db_connection } = await connect();
     db_connection
 
         .collection("personages")
-        .find({ created_by: username })
+        .find({ created_by: ObjectId(userId) })
         .toArray((err, result) => {
           if (err) return console.log(err);
 
-          console.log("personages :", result);
+          console.log("personnages :", result);
 
           db_client.close();
           res.send(result);
@@ -361,8 +385,8 @@ app.get("/personages/", /*verifySession,*/ async (req, res) => {
 app.post('/personnage',verifySession, async (req,res)=>{
 
   try {
-    const username = req.session.username;
-    req.body.created_by = username;
+    const userId = req.session.userId;
+    req.body.created_by = ObjectId(userId);
     req.body.carry_actual = 0;
     req.body.inventory_list = [];
     let newPersonage = req.body;
@@ -370,7 +394,7 @@ app.post('/personnage',verifySession, async (req,res)=>{
     let {db_client, db_connection} = await connect()
 
     try {
-      let personage_Exist = await db_connection.collection("personages").findOne({name: newPersonage.name, created_by:username});
+      let personage_Exist = await db_connection.collection("personages").findOne({name: newPersonage.name, created_by:ObjectId(userId)});
       if (personage_Exist) {
         throw new Error("Vous possédez déjà un personnage du même nom");
       }
@@ -393,7 +417,7 @@ app.post('/personnage',verifySession, async (req,res)=>{
 
 //Mettre à jour Personnage suivant username
 
-app.post("/personage/:id", verifySession, async (req, res, next) => {
+app.post("/personnage/:id", verifySession, async (req, res, next) => {
   console.log("update");
   console.log(req.params.id);
   console.log(req.body);
@@ -401,10 +425,10 @@ app.post("/personage/:id", verifySession, async (req, res, next) => {
   try {
     let { db_client, db_connection } = await connect();
 
-    const username = req.session.username;
+    const userId = req.session.userId;
 
     let result = await db_connection.collection("personages").updateOne(
-        { _id: ObjectId(req.params.id), created_by: username },
+        { _id: ObjectId(req.params.id), created_by: ObjectId(userId) },
         {
           $set: req.body,
         }
@@ -422,19 +446,20 @@ app.post("/personage/:id", verifySession, async (req, res, next) => {
 });
 
 //Delete 1 seul Personage suivant son id (avec username)
-app.delete("/personage/one/:id", verifySession, async (req, res, next) => {
+app.delete("/personnage/one/:id", verifySession, async (req, res, next) => {
   console.log("one");
 
   let { db_client, db_connection } = await connect();
 
   try {
 
-    const username = req.session.username;
-
+    const userId = req.session.userId;
+    console.log(userId)
+    console.log(req.params.id)
     let result = await db_connection
-        .collection("personnages")
-        .deleteOne({ _id: ObjectId(req.params.id), created_by: username});
-
+        .collection("personages")
+        .deleteOne({ _id: ObjectId(req.params.id), created_by: ObjectId(userId)});
+    console.log(result)
     if (result.deletedCount === 0) {
       next({ code: 400, message: "No task was deleted" });
     } else {
@@ -447,15 +472,15 @@ app.delete("/personage/one/:id", verifySession, async (req, res, next) => {
 });
 
 // Delete tous les personnages d'un user
-app.delete("/personages/many/:status", verifySession, async (req, res, next) => {
+app.delete("/personnages/many/:status", verifySession, async (req, res, next) => {
   let { db_client, db_connection } = await connect();
 
   console.log("many");
 
   try {
-    const username = req.session.username;
+    const userId = req.session.userId;
 
-    let filter = {created_by: username}; //all
+    let filter = {created_by: ObjectId(userId)}; //all
 
     if (req.params.status !== "all") {
       throw new Error("Operation does not exist");
@@ -474,7 +499,7 @@ app.delete("/personages/many/:status", verifySession, async (req, res, next) => 
           console.log(req.session);
           console.log(req.session.savedDocuments);
 
-          let result = await db_connection.collection("tasks").deleteMany(filter);
+          let result = await db_connection.collection("personages").deleteMany(filter);
         });
 
     res.send("ok");
@@ -485,7 +510,7 @@ app.delete("/personages/many/:status", verifySession, async (req, res, next) => 
 });
 
 //Récupere l'attribut liste d'id_items d'un personnage
-app.get("/personage_inventory/:id", /*verifySession,*/ async (req, res) => {
+app.get("/personnage_inventory/:id", /*verifySession,*/ async (req, res) => {
   const idPersonage = req.params.id
   //console.log(idPersonage);
   try {
@@ -511,7 +536,7 @@ app.get("/personage_inventory/:id", /*verifySession,*/ async (req, res) => {
 
 //Mettre à jour Personnage suivant ID
 
-app.post("/personage_inventory/:id", /*verifySession,*/ async (req, res, next) => {
+app.post("/personnage_inventory/:id", verifySession, async (req, res, next) => {
   //console.log("update");
   //console.log(req.params.id);
   //console.log(req.body);
