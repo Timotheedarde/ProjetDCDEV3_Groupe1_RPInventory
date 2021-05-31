@@ -17,7 +17,6 @@
 .edit-perso-form
 {
     background-color: #21242C;
-    width: 100%;
     border-radius: 5px;
     display: grid;
     grid-template: auto / 200px 1fr 150px 100px;
@@ -50,4 +49,18 @@
     border-radius: 3px;
     font-size: 2em;
     font-weight: 700;
+}
+
+@media all and (max-width: 900px) {
+
+    .edit-perso-form
+    {
+        grid-template: auto / 1fr;
+    }
+
+    .edit-perso-form span
+    {
+        grid-row: auto;
+    }
+
 }

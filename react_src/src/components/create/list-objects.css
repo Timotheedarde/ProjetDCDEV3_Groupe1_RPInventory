@@ -3,7 +3,6 @@
 .list-objects
 {
     background-color: #21242C;
-    width: 100%;
     border-radius: 5px;
     display: grid;
     grid-template: auto / 1fr;
@@ -44,4 +43,23 @@
 {
     display: grid;
     grid-template: auto / 200px 1fr 200px 200px;
+}
+
+@media all and (max-width: 900px) {
+
+    .title-list-objects
+    {
+        display: none;
+    }
+
+    .line-list-objects
+    {
+        grid-template: auto / 1fr;
+    }
+
+    .item-list-objects
+    {
+        grid-gap: 10px;
+    }
+
 }

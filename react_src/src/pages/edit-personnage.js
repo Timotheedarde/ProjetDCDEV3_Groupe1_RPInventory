@@ -24,7 +24,7 @@ export default function Personnage(props) {
 
 
     return (
-        <div>
+        <div className="main-edit-personnage">
             <Header appName="RP Inventory"/>
             <div className="prez-perso">
                 <div className="prez-perso-txt">

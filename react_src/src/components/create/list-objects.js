@@ -19,8 +19,10 @@ export default function FormCharacter(props) {
                     <span>Epée légendaire</span>
                     <span>Cette épée de feu applique -10 PV aux ennemis</span>
                     <span>20</span>
-                    <span><button>edit</button></span>
-                    <span><button>delete</button></span>
+                    <span>
+                        <button>edit</button>
+                        <button>delete</button>
+                    </span>
                 </div>
             </form>
         </div>
