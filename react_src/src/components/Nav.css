@@ -1,5 +1,5 @@
-.navigation{
-    width: 20%;
+.navigation {
+    margin: 0;
 }
 
 .navigation ul{
@@ -9,8 +9,20 @@
     flex-wrap: nowrap;
     align-items: center;
     justify-content: space-between;
+    padding: 0;
 }
 
 .navigation a{
     text-decoration: none;
+    color: white;
+    margin: 20px;
+}
+
+.identifiant {
+    color: white;
+    font-weight: bold;
+}
+
+@media screen and (max-width: 960px) {
+
 }

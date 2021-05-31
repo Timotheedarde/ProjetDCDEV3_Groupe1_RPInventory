@@ -1,7 +1,5 @@
 import React from "react";
-import {
-    Link,
-} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 import './Nav.css';
 
@@ -12,10 +10,10 @@ export default function Nav() {
         <nav className='navigation'>
             <ul>
                 <li>
-                    <Link to="/">Connexion</Link>
+                    <span className="identifiant ">Identifiant</span>
                 </li>
                 <li>
-                    <Link to="/register">Inscription</Link>
+                    <Link to="/register">Deconnexion</Link>
                 </li>
             </ul>
         </nav>
