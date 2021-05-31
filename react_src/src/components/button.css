@@ -14,3 +14,11 @@
     font-weight: 700;
     letter-spacing: normal;
 }
+
+@media all and (max-width: 1100px) {
+
+    .button-primary {
+        font-size: 15px;
+    }
+
+}
