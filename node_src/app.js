@@ -122,11 +122,11 @@ app.post("/items", /*verifySession,*/ async (req, res, next) => {
     req.body.created_by = username;
 
     db_connection
-        .collection("tasks")
+        .collection("items")
         .insertOne(req.body)
         .then((result) => {
           console.log("result : ", result);
-          res.send(result.insertedId);
+          res.send(result);
         })
         .catch((err) => {
           next(err);
