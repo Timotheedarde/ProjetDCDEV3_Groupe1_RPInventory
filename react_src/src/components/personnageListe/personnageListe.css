@@ -1,0 +1,80 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+    background-color: #21242C;
+    border-radius: 20px;
+}
+
+.perso-container {
+    background-color: #303340;
+    margin:20px;
+    border-radius: 10px;
+    width: calc(100% - 40px);
+    box-shadow: 0 0 5px 4px rgba(0, 0, 0, .2);
+}
+
+.illu-stats-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px;
+}
+
+.name-illu-container {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+.name {
+    color: white;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.jauge-container {
+    background-color: gray;
+    width: 20px;
+    padding: 10px;
+}
+
+.stats-container {
+    width: 50%;
+}
+
+.progress {
+    width: 100%;
+}
+
+.btns-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.btns {
+    border: none;
+    border-radius: 5px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.btn-images {
+    width: 15px;
+    height: 15px;
+}
+
+.btn-modifier {
+    background-color: #2656F4;
+}
+
+.btn-inventaire {
+    background-color: #78AB6F;
+}
+
+.btn-supprimer {
+    background-color: #F42626;
+}
