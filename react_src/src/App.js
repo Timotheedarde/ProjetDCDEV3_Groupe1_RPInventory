@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
     BrowserRouter as Router,
     Switch,
@@ -8,6 +8,7 @@ import Page_Login from './pages/auth/login';
 import Page_Register from './pages/auth/register';
 import Page_Personnage from './pages/personnage';
 import Page_Personnage_Edit from './pages/edit-personnage';
+import Page_Sandbox from './pages/sandbox';
 
 import './App.css';
 
@@ -18,6 +19,9 @@ function App() {
         <Switch>
             <Route exact path="/personnage/:id">
                 <Page_Personnage_Edit/>
+            </Route>
+            <Route exact path="/sandbox">
+                <Page_Sandbox/>
             </Route>
             <Route exact path="/personnage">
                 <Page_Personnage/>

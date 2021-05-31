@@ -3,7 +3,6 @@ import './form-character.css';
 import {useHistory} from "react-router";
 import axios from "axios";
 
-
 export default function FormCharacter(props) {
 
     const history = useHistory();
