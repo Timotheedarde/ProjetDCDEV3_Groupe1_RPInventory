@@ -1,0 +1,46 @@
+
+
+.list-objects
+{
+    background-color: #21242C;
+    width: 100%;
+    border-radius: 5px;
+    display: grid;
+    grid-template: auto / 1fr;
+    padding: 30px 40px;
+    grid-gap: 10px;
+}
+
+.title-list-objects
+{
+    padding: 0 20px;
+}
+
+.title-list-objects span
+{
+    color: white;
+    font-size: 1em;
+    font-weight: 700;
+}
+
+.item-list-objects
+{
+    padding: 20px;
+    background-color: #303340;
+}
+
+.item-list-objects span
+{
+    color: white;
+}
+
+.item-list-objects span:first-child
+{
+    font-weight: 700;
+}
+
+.line-list-objects
+{
+    display: grid;
+    grid-template: auto / 200px 1fr 200px 200px;
+}

@@ -1,0 +1,53 @@
+.content-edit-perso-form
+{
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.title-edit-perso
+{
+    padding: 50px 0 20px;
+    color: white;
+    font-size: 1em;
+    display: block;
+    font-weight: 700;
+}
+
+.edit-perso-form
+{
+    background-color: #21242C;
+    width: 100%;
+    border-radius: 5px;
+    display: grid;
+    grid-template: auto / 200px 1fr 150px 100px;
+    padding: 30px 40px;
+    grid-gap: 10px 30px;
+}
+
+.edit-perso-form span
+{
+    grid-row: 1;
+    color: white;
+    font-size: 1em;
+}
+
+.edit-perso-form input
+{
+    background-color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    font-size: 1em;
+    color: black;
+}
+
+.edit-perso-form button
+{
+    background-color: #78AB6F;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    font-size: 2em;
+    font-weight: 700;
+}
