@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import './personnageListe.css';
-import axios from "axios";
 import PersonnageItem from "./personnageItem";
 
 export default function PersonnageListe(props) {

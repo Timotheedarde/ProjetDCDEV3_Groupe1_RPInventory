@@ -59,50 +59,74 @@ app.get('/',verifySession, function (req, res) {
 })*/
 
 /*************************************************/
+
 //ITEMS
-//Récupere TOUS les items (Global)
-app.get("/items", async(req,res)=>{
+
+//Récuperer les items de la liste d'un personnage.
+app.get("/items/:id_personnage",verifySession, async(req,res, next)=>{
+
+  const userId = req.session.userId;
+  const personnageId = req.params.id_personnage;
+
+  let { db_client, db_connection } = await connect();
+
+  const session = db_client.startSession();
+
+  const transactionOptions = {
+    readPreference: 'primary',
+    readConcern: { level: 'local' },
+    writeConcern: { w: 'majority' }
+  };
   try {
-    let { db_client, db_connection } = await connect();
-    db_connection
-        .collection('items')
-        .find()
-        .toArray((err, result) => {
-          if (err) return console.log(err);
+    await session.withTransaction(async () => {
 
-          console.log("items :", result);
+      //1
+      let personnage = await db_connection
+          .collection("personages")
+          .findOne({"_id":ObjectId(personnageId),created_by: ObjectId(userId) })
 
-          db_client.close();
-          res.send(result);
-        });
+          let listItemsId = personnage.inventory_list;
+          console.log("liste itemsId :", listItemsId);
 
-  } catch (e) {
-    res.status(500);
-    res.send("Server error");
+      //2
+      await db_connection
+          .collection('items')
+          .find({"_id":{$in : listItemsId}})
+          .toArray((err, result) => {
+            if (err) return console.log(err);
+
+            console.log("inventaire :", result);
+          });
+
+    }, transactionOptions);
+    res.send("Transaction Récupération items ok");
+  }catch (e) {
+    next(e);
+  }finally {
+    await session.endSession();
+    await db_client.close();
   }
+
+
 
 });
 
+
 //Récupere 1 item en particulier, ID en parametre (En global)
-app.get("/item/:id", async(req,res)=>{
-  let idItem = req.params.id;
-  //console.log(idItem)
+app.get("/item/:id",verifySession, async(req,res)=>{
+
+  const userId = req.session.userId;
+  const itemId = req.params.id;
+
+  let { db_client, db_connection } = await connect();
   try {
-    let { db_client, db_connection } = await connect();
-    db_connection
-        .collection('items')
-        .find(
-            {_id: ObjectId(idItem)}
-        )
-        .toArray((err, result) => {
-          if (err) return console.log(err);
-
-          console.log("item :", idItem , result);
-
-          db_client.close();
-          res.send(result);
-        });
-
+    let item = await db_connection
+        .collection("items")
+        .findOne({ _id:ObjectId(itemId) ,created_by: ObjectId(userId) });
+    if (!item) {
+      throw new Error("Impossible de récuperer cet item");
+    }
+    res.send(item);
   } catch (e) {
     res.status(500);
     res.send("Server error");
@@ -111,53 +135,125 @@ app.get("/item/:id", async(req,res)=>{
 
 
 //Ajoute un Item selon Le personnage et le user
-app.post("/items/:id_personnage", verifySession, async (req, res, next) => {
+app.post("/item/:id_personnage", verifySession, async (req, res, next) => {
+  console.log("requete par transaction pour ajout item")
 
-  //1 find si le personnage appartient à l'utilisateur connecté findOne sur id du personnage
-  //2 inserer l'item en base avec ses caracteristiques
-  //3 modifier la liste d'id du personnage en y ajoutant l'id de l'item nouvellement crée.
+  const personnageId = req.params.id_personnage;
+  const userId = req.session.userId;
+  req.body.created_by = ObjectId(userId);
+  const newItem = req.body;
 
-  const session = client.startSession();
-  // Step 2: Optional. Define options to use for the transaction
+  let { db_client, db_connection } = await connect();
+
+  const session = db_client.startSession();
+
   const transactionOptions = {
     readPreference: 'primary',
     readConcern: { level: 'local' },
     writeConcern: { w: 'majority' }
   };
-  // Step 3: Use withTransaction to start a transaction, execute the callback, and commit (or abort on error)
-  // Note: The callback for withTransaction MUST be async and/or return a Promise.
   try {
     await session.withTransaction(async () => {
-      const coll1 = client.db('mydb1').collection('foo');
-      const coll2 = client.db('mydb2').collection('bar');
-      // Important:: You must pass the session to the operations
-      await coll1.insertOne({ abc: 1 }, { session });
-      await coll2.insertOne({ xyz: 999 }, { session });
+      //1 find si le personnage appartient à l'utilisateur connecté findOne sur id du personnage == created_by
+
+      let personnage = await db_connection
+          .collection("personages")
+          .findOne({ "_id":ObjectId(personnageId),created_by: ObjectId(userId) });
+
+      if (!personnage) {
+        next("Ce personnage ne vous appartient pas");
+      }
+
+
+      //2 inserer l'item en base avec ses caracteristiques
+      let item = await db_connection.collection("items").insertOne(newItem);
+      let itemId = item.insertedId;
+      //console.log("itemId",itemId)
+      //3 modifier la liste d'id du personnage en y ajoutant l'id de l'item nouvellement crée.
+
+      let result = await db_connection
+          .collection("personages")
+          .updateOne(
+              {_id: ObjectId(personnageId)},
+              {
+                $push: {
+                  "inventory_list":itemId
+                }
+              }
+          )
+      if(result.matchedCount === 0) {
+        next({code: 400, message: "No items was updated, id doesn't exist"})
+      }
+
     }, transactionOptions);
-  } finally {
+    res.send("Transaction ajout item ok");
+    //console.log("opération réalisée avec succés");
+  }catch (e) {
+    next(e);
+  }finally {
     await session.endSession();
-    await client.close();
+    await db_client.close();
   }
+});
 
+//Supprime un Item selon Le personnage et le user
+app.delete("/item/:id", verifySession, async (req, res, next) => {
+  console.log("requete par transaction pour SUPPRESSION item")
 
+  const userId = req.session.userId;
+  const deletedItemId = req.params.id;
+
+  console.log("userId : ", userId)
+  console.log("deletedId : ",deletedItemId)
+
+  let { db_client, db_connection } = await connect();
+
+  const session = db_client.startSession();
+
+  const transactionOptions = {
+    readPreference: 'primary',
+    readConcern: { level: 'local' },
+    writeConcern: { w: 'majority' }
+  };
   try {
-    let { db_client, db_connection } = await connect();
+    await session.withTransaction(async () => {
+      //1
+      let item = await db_connection
+          .collection("items")
+          .findOne({ _id:ObjectId(deletedItemId) ,created_by: ObjectId(userId) });
+      if (!item) {
+        throw new Error("Impossible de récuperer ce personnage");
+      }
+      let personnageId = personnage._id;
+      //console.log("étape 1")
+      //2
+      let result = await db_connection
+          .collection("personages")
+          .updateOne(
+              {_id: ObjectId(personnageId)},
+              {
+                $pull: { inventory_list: ObjectId(deletedItemId) }
+              }
+          )
+      if(result.matchedCount === 0) {
+        next({code: 400, message: "No items was updated, id doesn't exist"})
+      }
+      //console.log("étape 2")
 
-    const userId = req.session.userId;
+      //3
+      await db_connection.collection("items").deleteOne({_id: ObjectId(deletedItemId)});
+      //console.log("étape 3")
 
-    db_connection
-        .collection("items")
-        .insertOne(req.body)
-        .then((result) => {
-          console.log("result : ", result);
-          res.send(result.insertedId);
-        })
-        .catch((err) => {
-          next(err);
-        });
-  } catch (err) {
-    res.status(500);
-    res.send("Server Error");
+
+
+    }, transactionOptions);
+    res.send("Transaction Suppresion ok");
+    //console.log("opération réalisée avec succés");
+  }catch (e) {
+    next(e);
+  }finally {
+    await session.endSession();
+    await db_client.close();
   }
 });
 
@@ -208,27 +304,6 @@ app.delete("/items/",  async (req, res, next) => {
   }
 })
 
-//Supprime Item par ID
-app.delete("/items/one/:id",  async (req, res, next) => {
-  console.log("one")
-
-  let { db_client, db_connection } = await connect();
-
-  try {
-    let result = await db_connection
-        .collection("items")
-        .deleteOne({_id: ObjectId(req.params.id)})
-
-    if(result.deletedCount === 0) {
-      next({code: 400, message: "No task was deleted"})
-    } else {
-      res.send("ok")
-    }
-  } catch(err) {
-    console.log(err);
-    next(err)
-  }
-})
 
 /*************************************************/
 /*************************************************/
@@ -561,12 +636,6 @@ app.post("/personnage_inventory/:id", verifySession, async (req, res, next) => {
     res.send("Server error");
   }
 });
-
-
-
-
-
-
 
 
 
