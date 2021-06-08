@@ -1,9 +1,12 @@
 import React from 'react'
 import './list-objects.css'
 
-export default function FormCharacter(props) {
+export default function ListObjects(props) {
+
+    console.log("Inventaire : ",props.itemsList)
 
     return (
+
         <div className="content-edit-perso-form">
             <span className="title-edit-perso">
                 Liste des objets

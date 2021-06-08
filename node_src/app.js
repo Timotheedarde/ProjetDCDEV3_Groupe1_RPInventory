@@ -99,7 +99,7 @@ app.get("/items/:id_personnage",verifySession, async(req,res, next)=>{
           });
 
     }, transactionOptions);
-    res.send("Transaction Récupération items ok");
+    res.send("ok");
   }catch (e) {
     next(e);
   }finally {

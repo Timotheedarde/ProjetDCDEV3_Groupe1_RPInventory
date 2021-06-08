@@ -28,12 +28,9 @@ export default function Personnage(props) {
                 setPersonnages(response.data);
             })
             .catch((err) => {
-                if (err.response && err.response.status === 403) {
-                } else {
-                    alert(
-                        "Une erreur est survenue lors du chargement de vos données, veuillez réessayer ultérieurement."
-                    );
-                }
+                alert(
+                    "Une erreur est survenue lors du chargement de vos données, veuillez réessayer ultérieurement."
+                );
             });
     }
 
