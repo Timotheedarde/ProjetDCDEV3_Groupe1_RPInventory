@@ -1,5 +1,7 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import './form-edit-character.css'
+import {useHistory} from "react-router";
+import axios from "axios";
 
 export default function FormCharacter(props) {
 

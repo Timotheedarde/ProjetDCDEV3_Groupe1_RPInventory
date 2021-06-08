@@ -454,6 +454,30 @@ app.get("/personnages/", verifySession, async (req, res) => {
   }
 });
 
+//Récupère 1 personnage en particulier selon l'ID
+app.get("/personnage/:id", verifySession, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const persoID = req.params.id;
+
+    let { db_client, db_connection } = await connect();
+
+      let personnage = await db_connection
+          .collection("personages")
+          .findOne({ "_id":ObjectId(persoID),created_by: ObjectId(userId) });
+
+      if (!personnage) {
+        next("Impossible de récupérer ce personnage");
+      }
+
+      res.send(personnage);
+
+  } catch (err) {
+    res.status(500);
+    res.send("Server error");
+    }
+});
+
 
 //Ajoute un Personnage dans la BDD (avec username de session)
 

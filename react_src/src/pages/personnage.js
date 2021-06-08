@@ -14,7 +14,7 @@ export default function Personnage(props) {
 
     const [personnages, setPersonnages] = useState([]);
 
-    const [authenticated, setAnthenticated] = useLogin();
+    const [authenticated, setAuthenticated] = useLogin();
     const history = useHistory();
 
     if (authenticated) {
@@ -38,14 +38,18 @@ export default function Personnage(props) {
     }
 
 
-
     return (
         <div>
             <div>
                 <Header appName="RP Inventory"/>
                 <Button text="créer nouveau personnage"/>
-                <FormCharacter state={personnages} setState={setPersonnages} onUpdatePersonnage={updatePersonnage}/>
-                <PersonnageList state={personnages} setState={setPersonnages} onUpdatePersonnage={updatePersonnage}/>
+                <FormCharacter state={personnages}
+                               setState={setPersonnages}
+                               onUpdatePersonnage={updatePersonnage}/>
+
+                <PersonnageList state={personnages}
+                                setState={setPersonnages}
+                                onUpdatePersonnage={updatePersonnage}/>
             </div>
         </div>
     )

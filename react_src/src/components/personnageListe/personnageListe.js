@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import './personnageListe.css';
 import PersonnageItem from "./personnageItem";
+import axios from "axios";
 
 export default function PersonnageListe(props) {
 
@@ -8,9 +9,6 @@ export default function PersonnageListe(props) {
         props.onUpdatePersonnage()
     }, []);
 
-
-
-    console.log(props.state)
 
     return (
         <div className="container">
@@ -25,4 +23,4 @@ export default function PersonnageListe(props) {
             </ul>
         </div>
     );
-}
+};
